@@ -13,11 +13,11 @@ public class Estudio {
     private String descricao;
     private LocalDate dataCriacao;
     private StatusAtividade statusAtividade;
-    private String anoInicioAtividade;
+    private Integer anoInicioAtividade;
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    public Estudio(String nome, String descricao, LocalDate dataCriacao, StatusAtividade statusAtividade, String anoInicioAtividade) {
+    public Estudio(String nome, String descricao, LocalDate dataCriacao, StatusAtividade statusAtividade, Integer anoInicioAtividade) {
         this.id = sequence++;
         this.nome = nome;
         this.descricao = descricao;
@@ -74,11 +74,11 @@ public class Estudio {
         this.statusAtividade = statusAtividade;
     }
 
-    public String getAnoInicioAtividade() {
+    public Integer getAnoInicioAtividade() {
         return anoInicioAtividade;
     }
 
-    public void setAnoInicioAtividade(String anoInicioAtividade) {
+    public void setAnoInicioAtividade(Integer anoInicioAtividade) {
         this.anoInicioAtividade = anoInicioAtividade;
     }
 

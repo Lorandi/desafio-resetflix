@@ -13,12 +13,12 @@ public class Ator {
     private String nome;
     private LocalDate dataNascimento;
     private StatusCarreira statusCarreira;
-    private String anoInicioAtividade;
+    private Integer anoInicioAtividade;
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 
-    public Ator( String nome, String dataNascimento, StatusCarreira statusCarreira, String anoInicioAtividade) {
+    public Ator( String nome, String dataNascimento, StatusCarreira statusCarreira, Integer anoInicioAtividade) {
         this.id = sequence++;
         this.nome = nome;
         this.dataNascimento = LocalDate.parse(dataNascimento,formatter);
@@ -50,11 +50,11 @@ public class Ator {
         this.statusCarreira = statusCarreira;
     }
 
-    public String getAnoInicioAtividade() {
+    public Integer getAnoInicioAtividade() {
         return anoInicioAtividade;
     }
 
-    public void setAnoInicioAtividade(String anoInicioAtividade) {
+    public void setAnoInicioAtividade(Integer anoInicioAtividade) {
         this.anoInicioAtividade = anoInicioAtividade;
     }
 
