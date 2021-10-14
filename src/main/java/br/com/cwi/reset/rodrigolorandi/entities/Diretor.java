@@ -16,10 +16,10 @@ public class Diretor {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 
-    public Diretor(String nome, String dataNascimento, StatusCarreira statusCarreira, Integer anoInicioAtividade) {
+    public Diretor(String nome, LocalDate dataNascimento, StatusCarreira statusCarreira, Integer anoInicioAtividade) {
         this.id = sequence++;
         this.nome = nome;
-        this.dataNascimento = LocalDate.parse(dataNascimento,formatter);
+        this.dataNascimento = dataNascimento;
         this.anoInicioAtividade = anoInicioAtividade;
     }
 
