@@ -1,7 +1,5 @@
 package br.com.cwi.reset.rodrigolorandi.request;
 
-import br.com.cwi.reset.rodrigolorandi.entities.FakeDatabase;
-
 import java.time.LocalDate;
 
 public class DiretorRequest {

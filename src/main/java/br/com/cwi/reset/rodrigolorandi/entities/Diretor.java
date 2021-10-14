@@ -3,7 +3,7 @@ package br.com.cwi.reset.rodrigolorandi.entities;
 import br.com.cwi.reset.rodrigolorandi.enums.StatusCarreira;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+
 
 public class Diretor {
     private static Integer sequence = 0;
