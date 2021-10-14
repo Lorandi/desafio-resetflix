@@ -13,8 +13,6 @@ public class Diretor {
     private LocalDate dataNascimento;
     private Integer anoInicioAtividade;
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
 
     public Diretor(String nome, LocalDate dataNascimento, StatusCarreira statusCarreira, Integer anoInicioAtividade) {
         this.id = sequence++;
@@ -50,10 +48,10 @@ public class Diretor {
     @Override
     public String toString() {
         return "Diretor{" +
-                "Id='" + this.id + '\'' +
-                "nome='" + this.nome + '\'' +
-                ", dataNascimento=" + this.dataNascimento.format(formatter) +
-                ", anoInicioAtividade='" + this.anoInicioAtividade + '\'' +
+                "Id='" + id + '\'' +
+                "nome='" + nome + '\'' +
+                ", dataNascimento=" + dataNascimento +
+                ", anoInicioAtividade='" + anoInicioAtividade + '\'' +
                 '}';
     }
 }

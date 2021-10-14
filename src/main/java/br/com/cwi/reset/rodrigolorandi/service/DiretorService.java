@@ -7,11 +7,11 @@ import br.com.cwi.reset.rodrigolorandi.request.AtorRequest;
 
 import java.time.LocalDate;
 
-public class AtorService {
+public class DiretorService {
 
     private FakeDatabase fakeDatabase;
 
-    public AtorService(FakeDatabase fakeDatabase) {
+    public DiretorService(FakeDatabase fakeDatabase) {
         this.fakeDatabase = fakeDatabase;
     }
 
