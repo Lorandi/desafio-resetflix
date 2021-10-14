@@ -3,26 +3,23 @@ package br.com.cwi.reset.rodrigolorandi.entities;
 import br.com.cwi.reset.rodrigolorandi.enums.StatusCarreira;
 
 import java.time.LocalDate;
-
 import java.time.format.DateTimeFormatter;
 
-public class Ator {
+public class Diretor {
     private static Integer sequence = 0;
 
     private Integer id;
     private String nome;
     private LocalDate dataNascimento;
-    private StatusCarreira statusCarreira;
     private String anoInicioAtividade;
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 
-    public Ator( String nome, String dataNascimento, StatusCarreira statusCarreira, String anoInicioAtividade) {
+    public Diretor(String nome, String dataNascimento, StatusCarreira statusCarreira, String anoInicioAtividade) {
         this.id = sequence++;
         this.nome = nome;
         this.dataNascimento = LocalDate.parse(dataNascimento,formatter);
-        this.statusCarreira = statusCarreira;
         this.anoInicioAtividade = anoInicioAtividade;
     }
 
@@ -42,14 +39,6 @@ public class Ator {
         this.dataNascimento = dataNascimento;
     }
 
-    public StatusCarreira getStatusCarreira() {
-        return statusCarreira;
-    }
-
-    public void setStatusCarreira(StatusCarreira statusCarreira) {
-        this.statusCarreira = statusCarreira;
-    }
-
     public String getAnoInicioAtividade() {
         return anoInicioAtividade;
     }
@@ -60,11 +49,10 @@ public class Ator {
 
     @Override
     public String toString() {
-        return "Ator{" +
+        return "Diretor{" +
                 "Id='" + this.id + '\'' +
                 "nome='" + this.nome + '\'' +
                 ", dataNascimento=" + this.dataNascimento.format(formatter) +
-                ", statusCarreira=" + this.statusCarreira +
                 ", anoInicioAtividade='" + this.anoInicioAtividade + '\'' +
                 '}';
     }
