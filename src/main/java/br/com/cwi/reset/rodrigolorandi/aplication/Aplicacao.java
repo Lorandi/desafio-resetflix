@@ -3,6 +3,7 @@ package br.com.cwi.reset.rodrigolorandi.aplication;
 import br.com.cwi.reset.rodrigolorandi.entities.Ator;
 import br.com.cwi.reset.rodrigolorandi.entities.FakeDatabase;
 import br.com.cwi.reset.rodrigolorandi.enums.StatusCarreira;
+import br.com.cwi.reset.rodrigolorandi.request.AtorRequest;
 import br.com.cwi.reset.rodrigolorandi.service.AtorService;
 
 import java.time.LocalDate;
@@ -20,9 +21,15 @@ public class Aplicacao {
         LocalDate dataNascimento = LocalDate.of(1968, Month.SEPTEMBER, 25);
         StatusCarreira statusCarreira = StatusCarreira.EM_ATIVIDADE;
         Integer anoInicioAtividade = 1986;
-//        AtorRequest atorRequest = new AtorRequest(nome, dataNascimento, statusCarreira, anoInicioAtividade);
+        AtorRequest atorRequest = new AtorRequest(nome, dataNascimento, statusCarreira, anoInicioAtividade);
 
-        //atorService.criarAtor(atorRequest);
+
+        try{
+            atorService.criarAtor(atorRequest);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
 
         List<Ator> atores = fakeDatabase.recuperaAtores();
 
