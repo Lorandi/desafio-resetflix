@@ -24,7 +24,7 @@ public class AtorService {
 
     List<Ator> todosAtores = new ArrayList<>();
 
-    public void criarAtor(AtorRequest atorRequest){
+    public void criarAtor(AtorRequest atorRequest) {
         Ator ator = new Ator(atorRequest.getNome(),
                 atorRequest.getDataNascimento(),
                 atorRequest.getStatusCarreira(),
@@ -34,15 +34,31 @@ public class AtorService {
         fakeDatabase.persisteAtor(ator);
     }
 
-    public List<Ator> listarAtoresEmAtividade(String filtroNome){
-        for ( Ator ator : todosAtores){
-            if(ator.getStatusCarreira() == StatusCarreira.EM_ATIVIDADE){
-                System.out.println(ator);
+    public List<Ator> listarAtoresEmAtividade(String filtroNome) {
+        List<Ator> atoresEmAtividade = new ArrayList<>();
+        for (Ator ator : todosAtores) {
+            if (filtroNome != null) {
+                if (ator.getNome().equals(filtroNome)) {
+                    if (ator.getStatusCarreira() == StatusCarreira.EM_ATIVIDADE) {
+                        atoresEmAtividade.add(ator);
+                    }
+                } else {
+                    System.out.println(String.format("Ator não encontrato com o filtro %s, favor informar outro filtro.", filtroNome));
+                }
+            } else {
+                if (ator.getStatusCarreira() == StatusCarreira.EM_ATIVIDADE) {
+                    atoresEmAtividade.add(ator);
+                }
+            }
+            if (todosAtores == null) {
+                System.out.println("Nenhum ator cadastrado, favor cadastar atores.");
             }
         }
-
-
+        return atoresEmAtividade;
     }
 
-
+    
 }
+
+
+
