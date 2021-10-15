@@ -2,6 +2,7 @@ package br.com.cwi.reset.rodrigolorandi.service;
 
 import br.com.cwi.reset.rodrigolorandi.entities.Ator;
 import br.com.cwi.reset.rodrigolorandi.entities.FakeDatabase;
+import br.com.cwi.reset.rodrigolorandi.exception.*;
 import br.com.cwi.reset.rodrigolorandi.request.AtorRequest;
 
 import java.time.LocalDate;
@@ -18,42 +19,42 @@ public class AtorService {
     public void criarAtor( AtorRequest atorRequest) throws Exception {
 
         if(atorRequest.getNome() == null){
-            throw new Exception("Campo obrigatório não informado. Favor informar o campo nome.");
+            throw new NomeNaoInformadoException();
         }
 
         if(atorRequest.getDataNascimento() == null){
-            throw new Exception("Campo obrigatório não informado. Favor informar o campo dataNascimento.");
+            throw new DataNascimentoNaoInformadoException();
         }
 
         if(atorRequest.getStatusCarreira() == null){
-            throw new Exception("Campo obrigatório não informado. Favor informar o campo statusCarreira.");
+            throw new StatusCarreiraNaoInformadoException();
         }
 
         if(atorRequest.getAnoInicioAtividade() == null){
-            throw new Exception("Campo obrigatório não informado. Favor informar o campo inicioAtividade.");
+            throw new AnoInicioAtividadeNaoInformadoException();
         }
 
         if (atorRequest.getNome().split(" ").length  < 2){
-            throw new Exception("Deve ser informado no mínimo nome e sobrenome para o ator.");
+            throw new InformarNomeSobrenomeException("ator");
         }
 
         LocalDate hoje = LocalDate.now();
 
         if(atorRequest.getDataNascimento().isAfter(hoje)){
-            throw new Exception("Não é possível cadastrar atores não nascidos.");
+            throw new NaoCadastrarNaoNacidosException("atores");
         }
 
         Integer anoNascimento = atorRequest.getDataNascimento().getYear();
 
         if(atorRequest.getAnoInicioAtividade() < anoNascimento){
-            throw new Exception("Ano de início de atividade inválido para o ator cadastrado.");
+            throw new AnoInicioInvalidoException("ator");
         }
 
         List<Ator> atores = fakeDatabase.recuperaAtores();
 
         for(Ator atoresListados : atores){
             if(atoresListados.getNome().equalsIgnoreCase(atorRequest.getNome())){
-                throw new Exception(String.format("Já existe um ator cadastrado para o nome %s.", atorRequest.getNome()));
+                throw new JaExisteCadastradoException(atorRequest.getNome());
             }
         }
 
