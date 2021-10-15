@@ -3,7 +3,6 @@ package br.com.cwi.reset.rodrigolorandi.service;
 import br.com.cwi.reset.rodrigolorandi.entities.Ator;
 import br.com.cwi.reset.rodrigolorandi.entities.AtorEmAtividade;
 import br.com.cwi.reset.rodrigolorandi.entities.FakeDatabase;
-import br.com.cwi.reset.rodrigolorandi.enums.StatusAtividade;
 import br.com.cwi.reset.rodrigolorandi.enums.StatusCarreira;
 import br.com.cwi.reset.rodrigolorandi.exception.*;
 import br.com.cwi.reset.rodrigolorandi.request.AtorRequest;
@@ -94,16 +93,37 @@ public class AtorService {
                 }
             }
         }
-
         if (retorno.isEmpty()) {
             throw new FiltroNomeNaoEncontrado("Ator", filtroNome);
         }
-
         return retorno;
     }
 
+    public Ator consultarAtor(Integer id) throws Exception {
 
+        if( id == null){
+            throw new FiltroIdNaoInformadoException();
+        }
 
+        List<Ator> atores = fakeDatabase.recuperaAtores();
+
+        for (Ator ator : atores){
+            if(ator.getId().equals(id)){
+                return ator;
+            }
+        }
+        throw new ConsultarAtorPeloIdException("ator",id);
+    }
+
+    public List<Ator> consultarAtores() throws Exception {
+        final List<Ator> atores = fakeDatabase.recuperaAtores();
+
+        if (atores.isEmpty()) {
+            throw new ListaVaziaException("ator", "atores");
+        }
+
+        return atores;
+    }
 }
 
 
