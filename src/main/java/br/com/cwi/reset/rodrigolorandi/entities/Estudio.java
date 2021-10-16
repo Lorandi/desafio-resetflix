@@ -6,8 +6,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class Estudio {
-    private static Integer sequence = 0;
-
     private Integer id;
     private String nome;
     private String descricao;
@@ -15,23 +13,13 @@ public class Estudio {
     private StatusAtividade statusAtividade;
     private Integer anoInicioAtividade;
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-    public Estudio(String nome, String descricao, LocalDate dataCriacao, StatusAtividade statusAtividade, Integer anoInicioAtividade) {
-        this.id = sequence++;
+    public Estudio(Integer id, String nome, String descricao, LocalDate dataCriacao, StatusAtividade statusAtividade, Integer anoInicioAtividade) {
+        this.id = id;
         this.nome = nome;
         this.descricao = descricao;
         this.dataCriacao = dataCriacao;
         this.statusAtividade = statusAtividade;
         this.anoInicioAtividade = anoInicioAtividade;
-    }
-
-    public static Integer getSequence() {
-        return sequence;
-    }
-
-    public static void setSequence(Integer sequence) {
-        Estudio.sequence = sequence;
     }
 
     public Integer getId() {
