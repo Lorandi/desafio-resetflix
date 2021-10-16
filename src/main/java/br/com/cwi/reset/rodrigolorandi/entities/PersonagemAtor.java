@@ -5,9 +5,6 @@ import br.com.cwi.reset.rodrigolorandi.enums.TipoAtuacao;
 
 
 public class PersonagemAtor {
-
-    private static Integer sequence = 0;
-
     private Integer id;
     private Ator ator;
     private String nomePersonagem;
@@ -15,11 +12,19 @@ public class PersonagemAtor {
     private TipoAtuacao tipoAtuacao;
 
     public PersonagemAtor(Ator ator, String nomePersonagem, String descricaoPersonagem, TipoAtuacao tipoAtuacao) {
-        this.id = sequence++;
+        this.id = id;
         this.ator = ator;
         this.nomePersonagem = nomePersonagem;
         this.descricaoPersonagem = descricaoPersonagem;
         this.tipoAtuacao = tipoAtuacao;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Ator getAtor() {

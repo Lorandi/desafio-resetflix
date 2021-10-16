@@ -1,12 +1,17 @@
 package br.com.cwi.reset.rodrigolorandi.service;
 
+import br.com.cwi.reset.rodrigolorandi.entities.Ator;
+import br.com.cwi.reset.rodrigolorandi.entities.AtorEmAtividade;
 import br.com.cwi.reset.rodrigolorandi.entities.Diretor;
 import br.com.cwi.reset.rodrigolorandi.entities.FakeDatabase;
+import br.com.cwi.reset.rodrigolorandi.enums.StatusCarreira;
 import br.com.cwi.reset.rodrigolorandi.exception.*;
 import br.com.cwi.reset.rodrigolorandi.request.DiretorRequest;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class DiretorService {
 
@@ -58,6 +63,33 @@ public class DiretorService {
         Diretor diretor = new Diretor(geraId, diretorRequest.getNome(), diretorRequest.getDataNascimento(), diretorRequest.getAnoInicioAtividade());
 
         fakeDatabase.persisteDiretor(diretor);
+    }
+
+    public List<Diretor> listarDiretores(String filtroNome) throws Exception {
+        List<Diretor> diretores = fakeDatabase.recuperaDiretores();
+
+        if (diretores.isEmpty()) {
+            throw new ListaVaziaException("diretor", "diretores");
+        }
+
+        List<Diretor> retorno = new ArrayList<>();
+
+        if (filtroNome != null) {
+            for (Diretor diretor : diretores) {
+                boolean containsFilter = diretor.getNome().toLowerCase(Locale.ROOT).contains(filtroNome.toLowerCase(Locale.ROOT));
+                if (containsFilter) {
+                    retorno.add(new Diretor(diretor.getId(), diretor.getNome(), diretor.getDataNascimento(), diretor.getAnoInicioAtividade()));
+                }
+            }
+        } else {
+            for (Diretor diretor : diretores) {
+                retorno.add(new Diretor(diretor.getId(), diretor.getNome(), diretor.getDataNascimento(), diretor.getAnoInicioAtividade()));
+            }
+        }
+        if (retorno.isEmpty()) {
+            throw new FiltroNomeNaoEncontrado("Diretor", filtroNome);
+        }
+        return retorno;
     }
 
 
