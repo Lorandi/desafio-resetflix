@@ -112,7 +112,7 @@ public class AtorService {
                 return ator;
             }
         }
-        throw new ConsultarAtorPeloIdException("ator",id);
+        throw new ConsultarPeloIdException("ator",id);
     }
 
     public List<Ator> consultarAtores() throws Exception {

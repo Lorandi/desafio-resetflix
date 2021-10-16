@@ -92,5 +92,21 @@ public class DiretorService {
         return retorno;
     }
 
+    public Diretor consultarDiretor(final Integer id) throws Exception {
+        if (id == null) {
+            throw new FiltroIdNaoInformadoException();
+        }
+
+        final List<Diretor> diretores = fakeDatabase.recuperaDiretores();
+
+        for (Diretor diretor : diretores) {
+            if (diretor.getId().equals(id)) {
+                return diretor;
+            }
+        }
+
+        throw new ConsultarPeloIdException("diretor",id);
+    }
+
 
 }
