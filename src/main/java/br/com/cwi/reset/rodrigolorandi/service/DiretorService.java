@@ -1,10 +1,6 @@
 package br.com.cwi.reset.rodrigolorandi.service;
-
-import br.com.cwi.reset.rodrigolorandi.entities.Ator;
-import br.com.cwi.reset.rodrigolorandi.entities.AtorEmAtividade;
 import br.com.cwi.reset.rodrigolorandi.entities.Diretor;
 import br.com.cwi.reset.rodrigolorandi.entities.FakeDatabase;
-import br.com.cwi.reset.rodrigolorandi.enums.StatusCarreira;
 import br.com.cwi.reset.rodrigolorandi.exception.*;
 import br.com.cwi.reset.rodrigolorandi.request.DiretorRequest;
 
@@ -21,39 +17,39 @@ public class DiretorService {
         this.fakeDatabase = fakeDatabase;
     }
 
-    public void cadastrarDiretor(DiretorRequest diretorRequest) throws Exception{
-        if(diretorRequest.getNome() == null){
+    public void cadastrarDiretor(DiretorRequest diretorRequest) throws Exception {
+        if (diretorRequest.getNome() == null) {
             throw new NomeNaoInformadoException();
         }
 
-        if(diretorRequest.getDataNascimento() == null){
+        if (diretorRequest.getDataNascimento() == null) {
             throw new DataNascimentoNaoInformadoException();
         }
 
-        if(diretorRequest.getAnoInicioAtividade() == null){
+        if (diretorRequest.getAnoInicioAtividade() == null) {
             throw new AnoInicioAtividadeNaoInformadoException();
         }
 
-        if (diretorRequest.getNome().split(" ").length  < 2){
+        if (diretorRequest.getNome().split(" ").length < 2) {
             throw new InformarNomeSobrenomeException("diretor");
         }
 
         LocalDate hoje = LocalDate.now();
 
-        if(diretorRequest.getDataNascimento().isAfter(hoje)){
+        if (diretorRequest.getDataNascimento().isAfter(hoje)) {
             throw new NaoCadastrarNaoNacidosException("diretores");
         }
 
         Integer anoNascimento = diretorRequest.getDataNascimento().getYear();
 
-        if(diretorRequest.getAnoInicioAtividade() < anoNascimento){
+        if (diretorRequest.getAnoInicioAtividade() < anoNascimento) {
             throw new AnoInicioInvalidoException("diretor");
         }
 
         List<Diretor> diretores = fakeDatabase.recuperaDiretores();
 
-        for(Diretor diretoresListados : diretores){
-            if(diretoresListados.getNome().equalsIgnoreCase(diretoresListados.getNome())){
+        for (Diretor diretoresListados : diretores) {
+            if (diretoresListados.getNome().equalsIgnoreCase(diretoresListados.getNome())) {
                 throw new JaExisteCadastradoException(diretorRequest.getNome());
             }
         }
@@ -97,16 +93,13 @@ public class DiretorService {
             throw new FiltroIdNaoInformadoException();
         }
 
-        final List<Diretor> diretores = fakeDatabase.recuperaDiretores();
+        List<Diretor> diretores = fakeDatabase.recuperaDiretores();
 
         for (Diretor diretor : diretores) {
             if (diretor.getId().equals(id)) {
                 return diretor;
             }
         }
-
-        throw new ConsultarPeloIdException("diretor",id);
+        throw new ConsultarPeloIdException("diretor", id);
     }
-
-
 }
