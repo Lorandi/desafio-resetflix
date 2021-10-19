@@ -85,6 +85,7 @@ public class DiretorService {
         if (retorno.isEmpty()) {
             throw new FiltroNomeNaoEncontrado("Diretor", filtroNome);
         }
+
         return retorno;
     }
 
