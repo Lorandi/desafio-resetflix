@@ -52,7 +52,11 @@ public class EstudioService {
 
         Integer geraId = estudios.size() + 1;
 
-        Estudio estudio = new Estudio(geraId,estudioRequest.getNome(), estudioRequest.getDescricao(), estudioRequest.getDataCriacao(), estudioRequest.getStatusAtividade());
+        Estudio estudio = new Estudio(geraId,
+                estudioRequest.getNome(),
+                estudioRequest.getDescricao(),
+                estudioRequest.getDataCriacao(),
+                estudioRequest.getStatusAtividade());
         fakeDatabase.persisteEstudio(estudio);
     }
 
@@ -68,14 +72,25 @@ public class EstudioService {
 
         if (filtroNome != null) {
             for (Estudio estudio : estudios) {
-                boolean containsFilter = estudio.getNome().toLowerCase(Locale.ROOT).contains(filtroNome.toLowerCase(Locale.ROOT));
+                boolean containsFilter = estudio.getNome()
+                        .toLowerCase(Locale.ROOT)
+                        .contains(filtroNome
+                                .toLowerCase(Locale.ROOT));
                 if (containsFilter) {
-                    retorno.add(new Estudio(estudio.getId(), estudio.getNome(), estudio.getDescricao(), estudio.getDataCriacao(), estudio.getStatusAtividade()));
+                    retorno.add(new Estudio(estudio.getId(),
+                            estudio.getNome(),
+                            estudio.getDescricao(),
+                            estudio.getDataCriacao(),
+                            estudio.getStatusAtividade()));
                 }
             }
         } else {
             for (Estudio estudio : estudios) {
-                retorno.add(new Estudio(estudio.getId(), estudio.getNome(), estudio.getDescricao(), estudio.getDataCriacao(), estudio.getStatusAtividade()));
+                retorno.add(new Estudio(estudio.getId(),
+                        estudio.getNome(),
+                        estudio.getDescricao(),
+                        estudio.getDataCriacao(),
+                        estudio.getStatusAtividade()));
             }
         }
         if (retorno.isEmpty()) {
