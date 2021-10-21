@@ -4,19 +4,19 @@ import br.com.cwi.reset.rodrigolorandi.enums.StatusAtividade;
 
 import java.time.LocalDate;
 
-public class EstudioReques {
+public class EstudioRequest {
     private String nome;
     private String descricao;
     private LocalDate dataCriacao;
     private StatusAtividade statusAtividade;
-    private Integer anoInicioAtividade;
 
-    public EstudioReques(String nome, String descricao, LocalDate dataCriacao, StatusAtividade statusAtividade, Integer anoInicioAtividade) {
+
+    public EstudioRequest(String nome, String descricao, LocalDate dataCriacao, StatusAtividade statusAtividade) {
         this.nome = nome;
         this.descricao = descricao;
         this.dataCriacao = dataCriacao;
         this.statusAtividade = statusAtividade;
-        this.anoInicioAtividade = anoInicioAtividade;
+
     }
 
     public String getNome() {
@@ -51,14 +51,6 @@ public class EstudioReques {
         this.statusAtividade = statusAtividade;
     }
 
-    public Integer getAnoInicioAtividade() {
-        return anoInicioAtividade;
-    }
-
-    public void setAnoInicioAtividade(Integer anoInicioAtividade) {
-        this.anoInicioAtividade = anoInicioAtividade;
-    }
-
     @Override
     public String toString() {
         return "Estudio{" +
@@ -66,7 +58,6 @@ public class EstudioReques {
                 ", descricao='" + descricao + '\'' +
                 ", dataCriacao=" + dataCriacao +
                 ", statusAtividade=" + statusAtividade +
-                ", anoInicioAtividade='" + anoInicioAtividade + '\'' +
                 '}';
     }
 }

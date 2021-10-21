@@ -3,7 +3,6 @@ package br.com.cwi.reset.rodrigolorandi.entities;
 import br.com.cwi.reset.rodrigolorandi.enums.StatusAtividade;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 public class Estudio {
     private Integer id;
@@ -11,15 +10,13 @@ public class Estudio {
     private String descricao;
     private LocalDate dataCriacao;
     private StatusAtividade statusAtividade;
-    private Integer anoInicioAtividade;
 
-    public Estudio(Integer id, String nome, String descricao, LocalDate dataCriacao, StatusAtividade statusAtividade, Integer anoInicioAtividade) {
+    public Estudio(Integer id, String nome, String descricao, LocalDate dataCriacao, StatusAtividade statusAtividade) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
         this.dataCriacao = dataCriacao;
         this.statusAtividade = statusAtividade;
-        this.anoInicioAtividade = anoInicioAtividade;
     }
 
     public Integer getId() {
@@ -62,13 +59,6 @@ public class Estudio {
         this.statusAtividade = statusAtividade;
     }
 
-    public Integer getAnoInicioAtividade() {
-        return anoInicioAtividade;
-    }
-
-    public void setAnoInicioAtividade(Integer anoInicioAtividade) {
-        this.anoInicioAtividade = anoInicioAtividade;
-    }
 
     @Override
     public String toString() {
@@ -78,7 +68,6 @@ public class Estudio {
                 ", descricao='" + descricao + '\'' +
                 ", dataCriacao=" + dataCriacao +
                 ", statusAtividade=" + statusAtividade +
-                ", anoInicioAtividade='" + anoInicioAtividade + '\'' +
                 '}';
     }
 }
