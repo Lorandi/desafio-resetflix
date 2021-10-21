@@ -1,122 +1,104 @@
 package br.com.cwi.reset.rodrigolorandi.service;
 
-import br.com.cwi.reset.rodrigolorandi.entities.Estudio;
-import br.com.cwi.reset.rodrigolorandi.entities.FakeDatabase;
-import br.com.cwi.reset.rodrigolorandi.exception.*;
-import br.com.cwi.reset.rodrigolorandi.request.EstudioRequest;
+import br.com.cwi.reset.rodrigolorandi.entities.*;
+import br.com.cwi.reset.rodrigolorandi.enums.Genero;
+import br.com.cwi.reset.rodrigolorandi.exception.AtributosNaoCadastradosExcepcion;
+import br.com.cwi.reset.rodrigolorandi.exception.CampoNaoInformadoException;
+import br.com.cwi.reset.rodrigolorandi.exception.JaExisteCadastradoException;
 import br.com.cwi.reset.rodrigolorandi.request.FilmeRequest;
+import br.com.cwi.reset.rodrigolorandi.request.PersonagemRequest;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class FilmeService {
 
     private FakeDatabase fakeDatabase;
+    private DiretorService diretorService;
+    private EstudioService estudioService;
+    private AtorService atorService;
+    private PersonagemAtorService personagemAtorService;
 
     public FilmeService(FakeDatabase fakeDatabase) {
         this.fakeDatabase = fakeDatabase;
+        this.diretorService = new DiretorService(fakeDatabase);
+        this.estudioService = new EstudioService(fakeDatabase);
+        this.atorService = new AtorService(fakeDatabase);
+        this.personagemAtorService = new PersonagemAtorService(fakeDatabase);
     }
 
-    public void criarEstudio(FilmeRequest filmeRequest) throws Exception {
-
-        if (estudioRequest.getNome() == null) {
-            throw new NomeNaoInformadoException();
+    public void criarFilme(FilmeRequest filmeRequest) throws Exception {
+        if (filmeRequest.getNome() == null) {
+            throw new CampoNaoInformadoException("nome");
         }
-
-        if (estudioRequest.getDescricao() == null) {
-            throw new CampoNaoInformadoException("descricao");
+        if (filmeRequest.getAnoLancamento() == null) {
+            throw new CampoNaoInformadoException("anoLancamento");
         }
-
-        if (estudioRequest.getDataCriacao() == null) {
-            throw new CampoNaoInformadoException("dataCriacao");
+        if (filmeRequest.getCapaFilme() == null) {
+            throw new CampoNaoInformadoException("capaFilme");
         }
-
-        if (estudioRequest.getStatusAtividade() == null) {
-            throw new CampoNaoInformadoException("statusAtividade");
+        if (filmeRequest.getGeneros() == null) {
+            throw new CampoNaoInformadoException("generos");
         }
-
-        LocalDate hoje = LocalDate.now();
-
-        if (estudioRequest.getDataCriacao().isAfter(hoje)) {
-            throw new DataCriacaoEstudioNoFuturoException();
+        if (filmeRequest.getIdDiretor() == null) {
+            throw new CampoNaoInformadoException("idDiretor");
+        }
+        if (filmeRequest.getIdEstudio() == null) {
+            throw new CampoNaoInformadoException("idEstudio");
+        }
+        if (filmeRequest.getResumo() == null) {
+            throw new CampoNaoInformadoException("resumo");
+        }
+        if (filmeRequest.getPersonagens() == null) {
+            throw new CampoNaoInformadoException("personagens");
         }
 
         List<Estudio> estudios = fakeDatabase.recuperaEstudios();
-
+        Boolean estudioNaoListado = true;
         for (Estudio estudiosListados : estudios) {
-            if (estudiosListados.getNome().equalsIgnoreCase(estudioRequest.getNome())) {
-                throw new JaExisteCadastradoException("estudio", estudioRequest.getNome());
+            if (estudiosListados.getId().equals(filmeRequest.getIdEstudio())) {
+                estudioNaoListado = false;
             }
         }
-
-        Integer geraId = estudios.size() + 1;
-
-        Estudio estudio = new Estudio(geraId,
-                estudioRequest.getNome(),
-                estudioRequest.getDescricao(),
-                estudioRequest.getDataCriacao(),
-                estudioRequest.getStatusAtividade());
-        fakeDatabase.persisteEstudio(estudio);
-    }
-
-
-    public List<Estudio> consultarEstudios(String filtroNome) throws Exception {
-        List<Estudio> estudios = fakeDatabase.recuperaEstudios();
-
-        if (estudios.isEmpty()) {
-            throw new ListaVaziaException("estúdio", "estúdios");
+        if (estudioNaoListado) {
+            throw new AtributosNaoCadastradosExcepcion("estúdio", filmeRequest.getIdEstudio());
         }
 
-        List<Estudio> retorno = new ArrayList<>();
+        List<Diretor> diretores = fakeDatabase.recuperaDiretores();
+        Boolean diretorNaoListado = true;
+        for (Diretor diretoresListados : diretores) {
+            if (diretoresListados.getId().equals(filmeRequest.getIdDiretor())) {
+                estudioNaoListado = false;
+            }
+        }
+        if (diretorNaoListado) {
+            throw new AtributosNaoCadastradosExcepcion("diretor", filmeRequest.getIdDiretor());
+        }
 
-        if (filtroNome != null) {
-            for (Estudio estudio : estudios) {
-                boolean containsFilter = estudio.getNome()
-                        .toLowerCase(Locale.ROOT)
-                        .contains(filtroNome
-                                .toLowerCase(Locale.ROOT));
-                if (containsFilter) {
-                    retorno.add(new Estudio(estudio.getId(),
-                            estudio.getNome(),
-                            estudio.getDescricao(),
-                            estudio.getDataCriacao(),
-                            estudio.getStatusAtividade()));
+        List<Ator> atores = fakeDatabase.recuperaAtores();
+        List<PersonagemRequest> personagens = filmeRequest.getPersonagens();
+        Boolean atorListado = false;
+        for (Ator atoresListados : atores) {
+            for (PersonagemRequest request : personagens) {
+                if (atoresListados.getId().equals(request.getIdAtor())) {
+                    atorListado = true;
+                }
+                if (!atorListado) {
+                    throw new AtributosNaoCadastradosExcepcion("ator", request.getIdAtor());
                 }
             }
-        } else {
-            for (Estudio estudio : estudios) {
-                retorno.add(new Estudio(estudio.getId(),
-                        estudio.getNome(),
-                        estudio.getDescricao(),
-                        estudio.getDataCriacao(),
-                        estudio.getStatusAtividade()));
-            }
         }
-        if (retorno.isEmpty()) {
-            throw new FiltroNomeNaoEncontrado("Estúdio", filtroNome);
-        }
-        return retorno;
     }
 
+    public List<Filme> consultarFilmes(
+            String nomeFilme,
+            String nomeDiretor,
+            String nomePersonagem,
+            String nomeAtor) throws Exception {
+        List<Filme> filmes = new ArrayList<>();
 
-    public Estudio consultarEstudio(Integer id) throws Exception {
-
-        if( id == null){
-            throw new FiltroIdNaoInformadoException();
-        }
-
-        List<Estudio> estudios = fakeDatabase.recuperaEstudios();
-
-        for (Estudio estudio : estudios){
-            if(estudio.getId().equals(id)){
-                return estudio;
-            }
-        }
-        throw new ConsultarPeloIdException("estúdio",id);
+        return filmes;
     }
-
 }
 
 
