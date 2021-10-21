@@ -1,8 +1,5 @@
 package br.com.cwi.reset.rodrigolorandi.request;
 
-import br.com.cwi.reset.rodrigolorandi.entities.Diretor;
-import br.com.cwi.reset.rodrigolorandi.entities.Estudio;
-import br.com.cwi.reset.rodrigolorandi.entities.PersonagemAtor;
 import br.com.cwi.reset.rodrigolorandi.enums.Genero;
 
 import java.util.List;
