@@ -4,6 +4,7 @@ import br.com.cwi.reset.rodrigolorandi.entities.Estudio;
 import br.com.cwi.reset.rodrigolorandi.entities.FakeDatabase;
 import br.com.cwi.reset.rodrigolorandi.exception.*;
 import br.com.cwi.reset.rodrigolorandi.request.EstudioRequest;
+import br.com.cwi.reset.rodrigolorandi.request.FilmeRequest;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
