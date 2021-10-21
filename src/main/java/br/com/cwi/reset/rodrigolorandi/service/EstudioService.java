@@ -1,9 +1,6 @@
 package br.com.cwi.reset.rodrigolorandi.service;
 
-import br.com.cwi.reset.rodrigolorandi.entities.Ator;
-import br.com.cwi.reset.rodrigolorandi.entities.AtorEmAtividade;
-import br.com.cwi.reset.rodrigolorandi.entities.Estudio;
-import br.com.cwi.reset.rodrigolorandi.entities.FakeDatabase;
+import br.com.cwi.reset.rodrigolorandi.entities.*;
 import br.com.cwi.reset.rodrigolorandi.enums.StatusCarreira;
 import br.com.cwi.reset.rodrigolorandi.exception.*;
 import br.com.cwi.reset.rodrigolorandi.request.EstudioRequest;
@@ -49,7 +46,7 @@ public class EstudioService {
 
         for (Estudio estudiosListados : estudios) {
             if (estudiosListados.getNome().equalsIgnoreCase(estudioRequest.getNome())) {
-                throw new JaExisteCadastradoException("Estudio", estudioRequest.getNome());
+                throw new JaExisteCadastradoException("estudio", estudioRequest.getNome());
             }
         }
 
@@ -59,31 +56,51 @@ public class EstudioService {
         fakeDatabase.persisteEstudio(estudio);
     }
 
-    public Ator consultarAtor(Integer id) throws Exception {
+
+    public List<Estudio> consultarEstudios(String filtroNome) throws Exception {
+        List<Estudio> estudios = fakeDatabase.recuperaEstudios();
+
+        if (estudios.isEmpty()) {
+            throw new ListaVaziaException("estúdio", "estúdios");
+        }
+
+        List<Estudio> retorno = new ArrayList<>();
+
+        if (filtroNome != null) {
+            for (Estudio estudio : estudios) {
+                boolean containsFilter = estudio.getNome().toLowerCase(Locale.ROOT).contains(filtroNome.toLowerCase(Locale.ROOT));
+                if (containsFilter) {
+                    retorno.add(new Estudio(estudio.getId(), estudio.getNome(), estudio.getDescricao(), estudio.getDataCriacao(), estudio.getStatusAtividade()));
+                }
+            }
+        } else {
+            for (Estudio estudio : estudios) {
+                retorno.add(new Estudio(estudio.getId(), estudio.getNome(), estudio.getDescricao(), estudio.getDataCriacao(), estudio.getStatusAtividade()));
+            }
+        }
+        if (retorno.isEmpty()) {
+            throw new FiltroNomeNaoEncontrado("Estúdio", filtroNome);
+        }
+        return retorno;
+    }
+
+
+    public Estudio consultarEstudio(Integer id) throws Exception {
 
         if( id == null){
             throw new FiltroIdNaoInformadoException();
         }
 
-        List<Ator> atores = fakeDatabase.recuperaAtores();
+        List<Estudio> estudios = fakeDatabase.recuperaEstudios();
 
-        for (Ator ator : atores){
-            if(ator.getId().equals(id)){
-                return ator;
+        for (Estudio estudio : estudios){
+            if(estudio.getId().equals(id)){
+                return estudio;
             }
         }
-        throw new ConsultarPeloIdException("ator",id);
+        throw new ConsultarPeloIdException("estúdio",id);
     }
 
-    public List<Ator> consultarAtores() throws Exception {
-        final List<Ator> atores = fakeDatabase.recuperaAtores();
-
-        if (atores.isEmpty()) {
-            throw new ListaVaziaException("ator", "atores");
-        }
-
-        return atores;
-    }
 }
 
 
