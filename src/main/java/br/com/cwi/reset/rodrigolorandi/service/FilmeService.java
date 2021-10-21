@@ -1,6 +1,7 @@
 package br.com.cwi.reset.rodrigolorandi.service;
 
-import br.com.cwi.reset.rodrigolorandi.entities.*;
+import br.com.cwi.reset.rodrigolorandi.entities.Estudio;
+import br.com.cwi.reset.rodrigolorandi.entities.FakeDatabase;
 import br.com.cwi.reset.rodrigolorandi.exception.*;
 import br.com.cwi.reset.rodrigolorandi.request.EstudioRequest;
 
@@ -9,15 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class EstudioService {
+public class FilmeService {
 
     private FakeDatabase fakeDatabase;
 
-    public EstudioService(FakeDatabase fakeDatabase) {
+    public FilmeService(FakeDatabase fakeDatabase) {
         this.fakeDatabase = fakeDatabase;
     }
 
-    public void criarEstudio(EstudioRequest estudioRequest) throws Exception {
+    public void criarEstudio(FilmeRequest filmeRequest) throws Exception {
 
         if (estudioRequest.getNome() == null) {
             throw new NomeNaoInformadoException();
