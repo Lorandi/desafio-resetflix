@@ -4,7 +4,8 @@ import br.com.cwi.reset.rodrigolorandi.entities.*;
 import br.com.cwi.reset.rodrigolorandi.enums.Genero;
 import br.com.cwi.reset.rodrigolorandi.exception.AtributosNaoCadastradosExcepcion;
 import br.com.cwi.reset.rodrigolorandi.exception.CampoNaoInformadoException;
-import br.com.cwi.reset.rodrigolorandi.exception.JaExisteCadastradoException;
+import br.com.cwi.reset.rodrigolorandi.exception.InformarPeloMenosUmGeneroException;
+import br.com.cwi.reset.rodrigolorandi.exception.MesmoGeneroMaisDeUmaVezException;
 import br.com.cwi.reset.rodrigolorandi.request.FilmeRequest;
 import br.com.cwi.reset.rodrigolorandi.request.PersonagemRequest;
 
@@ -88,6 +89,22 @@ public class FilmeService {
                 }
             }
         }
+
+        if(filmeRequest.getGeneros().size()>1){
+            throw new InformarPeloMenosUmGeneroException();
+        }
+
+        List<Genero> generos = filmeRequest.getGeneros();
+
+        for(int i = 0; i < filmeRequest.getGeneros().size() - 1; i++){
+            for (int j = i + 1;  j < filmeRequest.getGeneros().size() - 1; j++ ){
+                if(generos.get(i).equals(generos.get(j))){
+                    throw new MesmoGeneroMaisDeUmaVezException();
+                }
+            }
+        }
+
+
     }
 
     public List<Filme> consultarFilmes(
