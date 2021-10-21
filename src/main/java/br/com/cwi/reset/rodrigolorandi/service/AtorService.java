@@ -58,7 +58,7 @@ public class AtorService {
 
         for (Ator atoresListados : atores) {
             if (atoresListados.getNome().equalsIgnoreCase(atorRequest.getNome())) {
-                throw new JaExisteCadastradoException(atorRequest.getNome());
+                throw new JaExisteCadastradoException("ator", atorRequest.getNome());
             }
         }
 

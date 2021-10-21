@@ -49,8 +49,8 @@ public class DiretorService {
         List<Diretor> diretores = fakeDatabase.recuperaDiretores();
 
         for (Diretor diretoresListados : diretores) {
-            if (diretoresListados.getNome().equalsIgnoreCase(diretoresListados.getNome())) {
-                throw new JaExisteCadastradoException(diretorRequest.getNome());
+            if (diretoresListados.getNome().equalsIgnoreCase(diretorRequest.getNome())) {
+                throw new JaExisteCadastradoException("diretor", diretorRequest.getNome());
             }
         }
 
