@@ -2,109 +2,61 @@ package br.com.cwi.reset.rodrigolorandi.service;
 
 import br.com.cwi.reset.rodrigolorandi.entities.*;
 import br.com.cwi.reset.rodrigolorandi.enums.Genero;
-import br.com.cwi.reset.rodrigolorandi.exception.AtributosNaoCadastradosExcepcion;
-import br.com.cwi.reset.rodrigolorandi.exception.CampoNaoInformadoException;
-import br.com.cwi.reset.rodrigolorandi.exception.InformarPeloMenosUmGeneroException;
-import br.com.cwi.reset.rodrigolorandi.exception.MesmoGeneroMaisDeUmaVezException;
+import br.com.cwi.reset.rodrigolorandi.exception.*;
 import br.com.cwi.reset.rodrigolorandi.request.FilmeRequest;
 import br.com.cwi.reset.rodrigolorandi.request.PersonagemRequest;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
+import static java.util.Objects.isNull;
+import static java.util.Optional.ofNullable;
 
 public class FilmeService {
 
     private FakeDatabase fakeDatabase;
     private DiretorService diretorService;
     private EstudioService estudioService;
-    private AtorService atorService;
     private PersonagemAtorService personagemAtorService;
 
     public FilmeService(FakeDatabase fakeDatabase) {
         this.fakeDatabase = fakeDatabase;
         this.diretorService = new DiretorService(fakeDatabase);
         this.estudioService = new EstudioService(fakeDatabase);
-        this.atorService = new AtorService(fakeDatabase);
         this.personagemAtorService = new PersonagemAtorService(fakeDatabase);
     }
 
     public void criarFilme(FilmeRequest filmeRequest) throws Exception {
-        if (filmeRequest.getNome() == null) {
-            throw new CampoNaoInformadoException("nome");
-        }
-        if (filmeRequest.getAnoLancamento() == null) {
-            throw new CampoNaoInformadoException("anoLancamento");
-        }
-        if (filmeRequest.getCapaFilme() == null) {
-            throw new CampoNaoInformadoException("capaFilme");
-        }
-        if (filmeRequest.getGeneros() == null) {
-            throw new CampoNaoInformadoException("generos");
-        }
-        if (filmeRequest.getIdDiretor() == null) {
-            throw new CampoNaoInformadoException("idDiretor");
-        }
-        if (filmeRequest.getIdEstudio() == null) {
-            throw new CampoNaoInformadoException("idEstudio");
-        }
-        if (filmeRequest.getResumo() == null) {
-            throw new CampoNaoInformadoException("resumo");
-        }
-        if (filmeRequest.getPersonagens() == null) {
-            throw new CampoNaoInformadoException("personagens");
+        final List<Filme> filmesCadastrados = fakeDatabase.recuperaFilmes();
+
+        final Integer idGerado = filmesCadastrados.size() + 1;
+
+        final Filme filme = new Filme(
+                idGerado,
+                ofNullable(filmeRequest.getNome()).orElseThrow(() -> new NomeNaoInformadoException()),
+                ofNullable(filmeRequest.getAnoLancamento()).orElseThrow(() -> new AnoLancamentoNaoInformadoException()),
+                ofNullable(filmeRequest.getCapaFilme()).orElseThrow(() -> new CapaFilmeNaoInformadaException()),
+                ofNullable(filmeRequest.getGeneros()).orElseThrow(() -> new GeneroNaoInformadoException()),
+                diretorService.consultarDiretor(filmeRequest.getIdDiretor()),
+                estudioService.consultarEstudio(filmeRequest.getIdEstudio()),
+                personagemAtorService.cadastrarPersonagensFilme(filmeRequest.getPersonagens()),
+                ofNullable(filmeRequest.getResumo()).orElseThrow(() -> new ResumoNaoInformadoException())
+        );
+
+        if (filme.getGeneros().isEmpty()) {
+            throw new CanseiDeCriarExceptionCustomizadaException("Deve ser informado pelo menos um gênero para o cadastro do filme.");
         }
 
-        List<Estudio> estudios = fakeDatabase.recuperaEstudios();
-        Boolean estudioNaoListado = true;
-        for (Estudio estudiosListados : estudios) {
-            if (estudiosListados.getId().equals(filmeRequest.getIdEstudio())) {
-                estudioNaoListado = false;
-            }
-        }
-        if (estudioNaoListado) {
-            throw new AtributosNaoCadastradosExcepcion("estúdio", filmeRequest.getIdEstudio());
-        }
+        final Set<Genero> generoSet = new HashSet<>();
 
-        List<Diretor> diretores = fakeDatabase.recuperaDiretores();
-        Boolean diretorNaoListado = true;
-        for (Diretor diretoresListados : diretores) {
-            if (diretoresListados.getId().equals(filmeRequest.getIdDiretor())) {
-                estudioNaoListado = false;
-            }
-        }
-        if (diretorNaoListado) {
-            throw new AtributosNaoCadastradosExcepcion("diretor", filmeRequest.getIdDiretor());
-        }
-
-        List<Ator> atores = fakeDatabase.recuperaAtores();
-        List<PersonagemRequest> personagens = filmeRequest.getPersonagens();
-        Boolean atorListado = false;
-        for (Ator atoresListados : atores) {
-            for (PersonagemRequest request : personagens) {
-                if (atoresListados.getId().equals(request.getIdAtor())) {
-                    atorListado = true;
-                }
-                if (!atorListado) {
-                    throw new AtributosNaoCadastradosExcepcion("ator", request.getIdAtor());
-                }
+        for (Genero genero : filme.getGeneros()) {
+            if (generoSet.contains(genero)) {
+                throw new CanseiDeCriarExceptionCustomizadaException("Não é permitido informar o mesmo gênero mais de uma vez para o mesmo filme.");
+            } else {
+                generoSet.add(genero);
             }
         }
 
-        if(filmeRequest.getGeneros().size()>1){
-            throw new InformarPeloMenosUmGeneroException();
-        }
-
-        List<Genero> generos = filmeRequest.getGeneros();
-
-        for(int i = 0; i < filmeRequest.getGeneros().size() - 1; i++){
-            for (int j = i + 1;  j < filmeRequest.getGeneros().size() - 1; j++ ){
-                if(generos.get(i).equals(generos.get(j))){
-                    throw new MesmoGeneroMaisDeUmaVezException();
-                }
-            }
-        }
-
-
+        fakeDatabase.persisteFilme(filme);
     }
 
     public List<Filme> consultarFilmes(
@@ -112,9 +64,103 @@ public class FilmeService {
             String nomeDiretor,
             String nomePersonagem,
             String nomeAtor) throws Exception {
-        List<Filme> filmes = new ArrayList<>();
+        final List<Filme> filmesCadastrados = fakeDatabase.recuperaFilmes();
 
-        return filmes;
+        if (filmesCadastrados.isEmpty()) {
+            throw new ListaVaziaException("filme", "filmes");
+        }
+
+        final List<Filme> filtrarNomePersonagem = filtrarNomePersonagem(filmesCadastrados, nomePersonagem);
+        final List<Filme> filtrarNomeAtor = filtrarNomeAtor(filtrarNomePersonagem, nomeAtor);
+        final List<Filme> filtrarNomeDiretor = filtrarNomeDiretor(filtrarNomeAtor, nomeDiretor);
+        final List<Filme> filtroFinal = filtrarNomeFilme(filtrarNomeDiretor, nomeFilme);
+
+        if (filtroFinal.isEmpty()) {
+            throw new CanseiDeCriarExceptionCustomizadaException(
+                    String.format(
+                            "Filme não encontrado com os filtros nomeFilme=%s, nomeDiretor=%s, nomePersonagem=%s, nomeAtor=%s, favor informar outros filtros.",
+                            nomeFilme,
+                            nomeDiretor,
+                            nomePersonagem,
+                            nomeAtor
+                    )
+            );
+        }
+
+        return filtroFinal;
+    }
+
+    private List<Filme> filtrarNomeFilme(final List<Filme> listaOriginal, final String nome) {
+        if (isNull(nome)) {
+            return listaOriginal;
+        }
+
+        final List<Filme> filmeFiltrado = new ArrayList<>();
+
+        for (Filme filme : listaOriginal) {
+            if (filme.getNome().toLowerCase(Locale.ROOT).equalsIgnoreCase(nome.toLowerCase(Locale.ROOT))) {
+                filmeFiltrado.add(filme);
+            }
+        }
+
+        return filmeFiltrado;
+    }
+
+    private List<Filme> filtrarNomeDiretor(final List<Filme> listaOriginal, final String nome) {
+        if (isNull(nome)) {
+            return listaOriginal;
+        }
+
+        final List<Filme> filmeFiltrado = new ArrayList<>();
+
+        for (Filme filme : listaOriginal) {
+            if (filme.getDiretor().getNome().toLowerCase(Locale.ROOT).equalsIgnoreCase(nome.toLowerCase(Locale.ROOT))) {
+                filmeFiltrado.add(filme);
+            }
+        }
+
+        return filmeFiltrado;
+    }
+
+    private List<Filme> filtrarNomeAtor(final List<Filme> listaOriginal, final String nome) {
+        if (isNull(nome)) {
+            return listaOriginal;
+        }
+
+        final List<Filme> filmeFiltrado = new ArrayList<>();
+
+        for (Filme filme : listaOriginal) {
+            for (PersonagemAtor personagens : filme.getPersonagens()) {
+                if (personagens.getAtor().getNome().toLowerCase(Locale.ROOT).equalsIgnoreCase(nome.toLowerCase(Locale.ROOT))) {
+                    filmeFiltrado.add(filme);
+                    break;
+                }
+            }
+        }
+
+        return filmeFiltrado;
+    }
+
+    private List<Filme> filtrarNomePersonagem(final List<Filme> listaOriginal, final String nome) {
+        if (isNull(nome)) {
+            return listaOriginal;
+        }
+
+        final List<Filme> filmeFiltrado = new ArrayList<>();
+
+        for (Filme filme : listaOriginal) {
+            for (PersonagemAtor personagens : filme.getPersonagens()) {
+                if (personagens.getNomePersonagem()
+                        .toLowerCase(Locale.ROOT)
+                        .equalsIgnoreCase(nome.toLowerCase(Locale.ROOT))
+                ) {
+                    filmeFiltrado.add(filme);
+                    break;
+                }
+            }
+        }
+
+        return filmeFiltrado;
     }
 }
 

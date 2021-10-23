@@ -101,18 +101,18 @@ public class EstudioService {
 
     public Estudio consultarEstudio(Integer id) throws Exception {
 
-        if( id == null){
+        if (id == null) {
             throw new FiltroIdNaoInformadoException();
         }
 
         List<Estudio> estudios = fakeDatabase.recuperaEstudios();
 
-        for (Estudio estudio : estudios){
-            if(estudio.getId().equals(id)){
+        for (Estudio estudio : estudios) {
+            if (estudio.getId().equals(id)) {
                 return estudio;
             }
         }
-        throw new ConsultarPeloIdException("estúdio",id);
+        throw new ConsultarPeloIdException("estúdio", id);
     }
 
 }
