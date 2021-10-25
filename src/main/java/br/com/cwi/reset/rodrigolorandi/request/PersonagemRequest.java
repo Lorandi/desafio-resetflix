@@ -43,4 +43,6 @@ public class PersonagemRequest {
 
     @Override
     public int hashCode() {
-        return Objects.hash(idAtor, nomePersonagem);}
+        return Objects.hash(idAtor, nomePersonagem);
+    }
+}
